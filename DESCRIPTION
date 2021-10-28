@@ -1,0 +1,24 @@
+Package: viLDA
+Title: variational inference Latent Dirichlet Allocation
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Chinmay",
+           family = "Raut",
+           role = c("aut", "cre"),
+           email = "chinmay0raut@gmail.com",
+           comment = c(ORCID = "0000-0003-0663-383X")),
+    person(given = "Michael",
+           family = "Miller",
+           role = c("aut", "ctb"),
+           email = "rmmill@umich.edu"),
+    person(given = "Leo",
+           family = "Zhao",
+           role = c("aut", "ctb"),
+           email = "zhaoleo@umich.edu"))
+Description: What the package does (one paragraph).
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
