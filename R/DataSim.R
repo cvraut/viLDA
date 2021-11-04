@@ -1,6 +1,30 @@
-
-
+library(stats)
+library(DirichletReg)
 # list of well-defined protocols for Data simulation
+
+F.unif.int <- function(alpha){
+  return(as.integer(runif(1,1,alpha)))
+}
+
+G.Bernoulli <- function(beta){
+  return(rbinom(1,1,beta))
+}
+
+create.beta.matrix.bern <- function(K,p,a=1.0,b=1.0){
+  if(length(a) == 1){
+    a = rep(a,p)
+  }
+  else if(length(a) != p){
+    stop("length of a is not either 1 or p")
+  }
+  if(length(b) == 1){
+    b = rep(b,p)
+  }
+  else if(length(b) != p){
+    stop("length of b is not either 1 or p")
+  }
+  return(sapply(1:p, function(i){rbeta(K,shape1=a[i],shape2=b[i])}))
+}
 
 #' DataSim
 #'
@@ -28,7 +52,35 @@
 #' add(10, 1)
 #'
 #' @export
-DataSim <- function(N,K,p,F,G,alpha,beta,...){
+DataSim <- function(N,K,p,F,G,alpha,beta,seed=19890418,...){
+  set.seed(seed)
   result <- list()
+  grp_cnts = rep(0,K)
+  # if alpha is scalar with dim 1x1
+  for(i in 1:(K-1)){
+    grp_cnts[i] = min(F(alpha),N-sum(grp_cnts)-(K-i))
+  }
+  grp_cnts[K] = N-sum(grp_cnts)
+  # if beta is kxp matrix
+  data = matrix(0,nrow=N,ncol=p)
+  grp_inclusion = rep(0,N)
+  for(i in 1:K){
+    for(j in 1:grp_cnts[i]){
+      row_i = sum(grp_cnts[0:(i-1)])+j
+      data[row_i,] = sapply(beta[i,], G)
+      grp_inclusion[row_i] = i
+    }
+  }
+
+  # store & return results
+  result <- list("grp_cnts"=grp_cnts,"data"=data,"grp_inclusion"=grp_inclusion)
   return(result)
 }
+
+DataSim.unif.bern <- function(N=100,K=10,p=2000,seed=19890418,beta.params=c(1.0,5.0),...){
+  set.seed(seed)
+  alpha <- 2*N/K
+  beta <- create.beta.matrix.bern(K,p,beta.params[1],beta.params[2])
+  return(DataSim(N,K,p,F=F.unif.int,G=G.Bernoulli,alpha=alpha,beta=beta,seed=seed))
+}
+
