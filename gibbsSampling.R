@@ -63,9 +63,9 @@ for (d in 1:numDocuments) {
   }
 }
 
-numEpochs <- 50000
-warmUp <- 5000
-lag <- 50
+numEpochs <- 20000
+warmUp <- 2000
+lag <- 20
 sampleIndex <- 0
 
 listWordParamSamples <- list()
@@ -111,7 +111,7 @@ for (epoch in 1:numEpochs) {
     }
     for (doc in 1:numDocuments) {
       for (topic in 1:numTopics) {
-        topicParameters[doc,topic] <- (Cdt[doc,topic] + alphaTopics) / (sum(Cdt[doc,topic]) + lengthVocab*alphaTopics)
+        topicParameters[doc,topic] <- (Cdt[doc,topic] + alphaTopics) / (sum(Cdt[doc,]) + numTopics*alphaTopics)
       }
     }
 
