@@ -7,6 +7,8 @@ library(Rcpp)
 # 2) add Rcpp function
 # 3) allow for more general mixture components
 
+start_time <- Sys.time()
+
 vocab = c(1,2,3,4,5)
 lengthVocab <- length(vocab)
 numTopics <- 2
@@ -63,9 +65,9 @@ for (d in 1:numDocuments) {
   }
 }
 
-numEpochs <- 20000
-warmUp <- 2000
-lag <- 20
+numEpochs <- 50000
+warmUp <- 5000
+lag <- 50
 sampleIndex <- 0
 
 listWordParamSamples <- list()
@@ -129,8 +131,12 @@ for (epoch in 1:numEpochs) {
 # Obtain posterior means
 posteriorAlphaWords <- Reduce("+", listWordParamSamples)/length(listWordParamSamples)
 posteriorAlphaTopics <- Reduce("+", listTopicParamSamples)/length(listTopicParamSamples)
-posteriorAlphaWords
-posteriorAlphaTopics
+print(posteriorAlphaWords)
+print(posteriorAlphaTopics)
+
+end_time <- Sys.time()
+
+print(paste0("running  time: ", end_time - start_time))
 
 
 
