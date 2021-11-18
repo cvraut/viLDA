@@ -54,7 +54,6 @@ create.beta.matrix.bern <- function(K,p,a=1.0,b=1.0){
 #' @export
 DataSim <- function(N,K,p,F,G,alpha,beta,seed=19890418,...){
   set.seed(seed)
-  result <- list()
   grp_cnts = rep(0,K)
   # if alpha is scalar with dim 1x1
   for(i in 1:(K-1)){
