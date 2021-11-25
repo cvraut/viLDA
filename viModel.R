@@ -17,8 +17,8 @@ start_time <- Sys.time()
 vocab = c(0,1,2,3,4)
 lengthVocab <- length(vocab)
 numTopics <- 2
-numDocuments <- 6
-lengthDocuments <- 5
+numDocuments <- 32
+lengthDocuments <- 24
 numWords <- numDocuments*lengthDocuments
 topics <- 0:(numTopics-1)
 
@@ -54,14 +54,23 @@ resList <- svi(words = words,
                         lengthVocab = lengthVocab,
                         numDocuments = numDocuments,
                         lengthDocuments = lengthDocuments,
-                        maxIter = 2000,
+                        maxIter = 5000,
+                        maxVBiter = 2000,
                         alphaWords = alphaWords,
                         alphaTopics = alphaTopics,
-                        rho = 0.1)
+                        rho = 0.1,
+                        tol = 0.0001)
 
-print(resList[[1]])
-print(resList[[2]])
-print(resList[[3]])
+print("printing estimated variational parameters for the word distribution")
+print(round(resList[[1]]), 3)
+print("printing estimated variational parameters for the topic distribution")
+print(round(resList[[3]]), 3)
+print("printing predicted topics (remember topic label switching is arbitrary")
+print(round(resList[[4]]), 3)
+
+print("printing true values")
+print(wordDistributions)
+print(generatedTopics)
 
 
 
