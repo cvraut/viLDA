@@ -9,7 +9,7 @@ using namespace Rcpp;
 // [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::export]]
-List svi(IntegerVector words, IntegerVector docIDs, IntegerVector lengthDocumentVec,
+List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
          IntegerVector topics, int lengthVocab, int numDocuments, int maxIterConst,
          int maxVBiterConst, double alphaWords, double alphaTopics, double rho, double tol) {
 
@@ -18,7 +18,7 @@ List svi(IntegerVector words, IntegerVector docIDs, IntegerVector lengthDocument
   int cumulativeNumDocs = 0;
   for (int i = 0; i < numDocuments; i++) {
     docStartIndices[i] = cumulativeNumDocs;
-    cumulativeNumDocs = cumulativeNumDocs + lengthDocumentVec[i];
+    cumulativeNumDocs = cumulativeNumDocs + numDistinctWordVec[i];
   }
 
   IntegerVector listDocIDs(numDocuments);
@@ -26,7 +26,7 @@ List svi(IntegerVector words, IntegerVector docIDs, IntegerVector lengthDocument
     listDocIDs[i] = i;
   }
 
-  int numWords = words.length();
+  int numWords = sum(data.column(2));
   int numTopics = topics.length();
 
   NumericVector alphaWordsVec(lengthVocab);
@@ -46,7 +46,7 @@ List svi(IntegerVector words, IntegerVector docIDs, IntegerVector lengthDocument
     lambdaMat.row(i) = lambdaMat.row(i) / sum(lambdaMat.row(i));
   }
 
-  NumericMatrix phiMat(numWords, numTopics);
+  NumericMatrix phiMat(data.nrow(), numTopics);
   NumericMatrix gammaMat(numDocuments, numTopics);
   NumericMatrix intermediateTopics;
   NumericMatrix lambdaMatHat(numTopics, lengthVocab);
@@ -73,104 +73,109 @@ List svi(IntegerVector words, IntegerVector docIDs, IntegerVector lengthDocument
 
   double lambdaError;
 
-  NumericMatrix wordIndicatorMatrix(numWords, lengthVocab);
-  for (int word = 0; word < numWords; word++) {
+  NumericMatrix wordIndicatorMatrix(data.nrow(), lengthVocab);
+  for (int word = 0; word < data.nrow(); word++) {
     for(int token = 0; token < lengthVocab; token++) {
       wordIndicatorMatrix(word, token) = 0;
     }
-    wordIndicatorMatrix(word, words[word]) = 1;
+    wordIndicatorMatrix(word, data(word, 1)) = 1;
   }
 
-  int maxIter = maxIterConst*pow(numDocuments, 2);
+  int maxEpoch = maxIterConst*numDocuments;
   int maxVBiter = maxVBiterConst*numWords;
 
   Rcout << "starting SVI" << "\n";
 
   // Stochastic Variational Inference
-  for (int iter = 0; iter < maxIter; iter++) {
+  for (int epoch = 0; epoch < maxEpoch; epoch++) {
 
-    // reset vector used to assess convergence in topic variational parameters
-    NumericVector oldGammaVector(numTopics);
-    for (int topic = 0; topic < numTopics; topic++) {
-      oldGammaVector[topic] = 0;
-    }
-
-    // sample a document and update its local parameters in this iteration
-    singleSample = sample(listDocIDs, 1, true);
-    sampledDoc = singleSample[0];
-    docStartIndex = docStartIndices[sampledDoc];
-
-    // Initialize topic mixture variational parameters to one
-    for (int topic = 0; topic < numTopics; topic++) {
-      gammaMat(sampledDoc, topic) = 1;
-    }
-
-    // VI for parameters for a specific document
-    for (int vbIter = 0; vbIter < maxVBiter; vbIter++) {
-
-      // Calculating row sums of digamma function for topic mixture variational parameters
-      digammaSumGammaMat = 0;
+    for (int iter = 0; iter < numDocuments; iter++) {
+      // reset vector used to assess convergence in topic variational parameters
+      NumericVector oldGammaVector(numTopics);
       for (int topic = 0; topic < numTopics; topic++) {
-        digammaSumGammaMat = digammaSumGammaMat + R::digamma(gammaMat(sampledDoc,topic));
+        oldGammaVector[topic] = 0;
       }
 
-      // calculating row sums of digamma function for word variational parameters
+      // // sample a document and update its local parameters in this iteration
+      // singleSample = sample(listDocIDs, 1, true);
+      // sampledDoc = singleSample[0];
+      // docStartIndex = docStartIndices[sampledDoc];
+
+      sampledDoc = iter;
+      docStartIndex = docStartIndices[sampledDoc];
+
+      // Initialize topic mixture variational parameters to one
       for (int topic = 0; topic < numTopics; topic++) {
-        digammaSumlambdaMat[topic] = 0;
-        for (int token = 0; token < lengthVocab; token++) {
-          digammaSumlambdaMat[topic] = digammaSumlambdaMat[topic] + R::digamma(lambdaMat(topic,token));
-        }
+        gammaMat(sampledDoc, topic) = 1;
       }
 
-      // VI for topic distribution parameters for the sampled document
-      for (int word = 0; word < lengthDocumentVec[sampledDoc]; word++) {
+      // VI for parameters for a specific document
+      for (int vbIter = 0; vbIter < maxVBiter; vbIter++) {
 
-        // calculate EVs used in the local variational solution for topic probabilities
+        // Calculating row sums of digamma function for topic mixture variational parameters
+        digammaSumGammaMat = 0;
         for (int topic = 0; topic < numTopics; topic++) {
-          phiMatArgument = -1*digammaSumGammaMat - digammaSumlambdaMat[topic];
-          phiMatArgument = phiMatArgument + R::digamma(gammaMat(sampledDoc,topic));
-          phiMatArgument = phiMatArgument + R::digamma(lambdaMat(topic, words[docStartIndex + word]));
-          phiMatArgumentArray[topic] = phiMatArgument;
+          digammaSumGammaMat = digammaSumGammaMat + R::digamma(gammaMat(sampledDoc,topic));
         }
 
-        // subtract max exponential argument from all values to avoid numerical errors
-        phiMatMaxArgument = max(phiMatArgumentArray);
+        // calculating row sums of digamma function for word variational parameters
         for (int topic = 0; topic < numTopics; topic++) {
-          phiMat(docStartIndex + word, topic) = exp(phiMatArgumentArray[topic] - phiMatMaxArgument);
+          digammaSumlambdaMat[topic] = 0;
+          for (int token = 0; token < lengthVocab; token++) {
+            digammaSumlambdaMat[topic] = digammaSumlambdaMat[topic] + R::digamma(lambdaMat(topic,token));
+          }
         }
 
-        // normalize topic probabilities to one
-        phiMat.row(docStartIndex + word) = phiMat.row(docStartIndex + word)/sum(phiMat.row(docStartIndex + word));
+        // VI for topic distribution parameters for the sampled document
+        for (int word = 0; word < numDistinctWordVec[sampledDoc]; word++) {
+
+          // calculate EVs used in the local variational solution for topic probabilities
+          for (int topic = 0; topic < numTopics; topic++) {
+            phiMatArgument = -1*digammaSumGammaMat - digammaSumlambdaMat[topic];
+            phiMatArgument = phiMatArgument + R::digamma(gammaMat(sampledDoc,topic));
+            phiMatArgument = phiMatArgument + R::digamma(lambdaMat(topic, data(docStartIndex + word, 1)));
+            phiMatArgumentArray[topic] = phiMatArgument;
+          }
+
+          // subtract max exponential argument from all values to avoid numerical errors
+          phiMatMaxArgument = max(phiMatArgumentArray);
+          for (int topic = 0; topic < numTopics; topic++) {
+            phiMat(docStartIndex + word, topic) = exp(phiMatArgumentArray[topic] - phiMatMaxArgument);
+          }
+
+          // normalize topic probabilities to one
+          phiMat.row(docStartIndex + word) = phiMat.row(docStartIndex + word)/sum(phiMat.row(docStartIndex + word));
+        }
+
+        // VI for topic mixture parameters for this document
+        phiMatRowSum = phiMat.row(docStartIndex);
+        for (int word = 1; word < numDistinctWordVec[sampledDoc]; word++) {
+          phiMatRowSum = phiMatRowSum + data(docStartIndex + word, 2) * phiMat.row(docStartIndex + word);
+        }
+        gammaMat.row(sampledDoc) = alphaTopicsVec + phiMatRowSum;
+
+        // break if convergence is reached
+        if (sum(pow(oldGammaVector - gammaMat.row(sampledDoc), 2)) < tol) {
+          break;
+        } else {
+          oldGammaVector = gammaMat.row(sampledDoc);
+        }
+
       }
 
-      // VI for topic mixture parameters for this document
-      phiMatRowSum = phiMat.row(docStartIndex);
-      for (int word = 1; word < lengthDocumentVec[sampledDoc]; word++) {
-        phiMatRowSum = phiMatRowSum + phiMat.row(docStartIndex + word);
-      }
-      gammaMat.row(sampledDoc) = alphaTopicsVec + phiMatRowSum;
-
-      // break if convergence is reached
-      if (sum(pow(oldGammaVector - gammaMat.row(sampledDoc), 2)) < tol) {
-        break;
-      } else {
-        oldGammaVector = gammaMat.row(sampledDoc);
+      // VI for word distribution parameters (global)
+      for (int topic = 0; topic < numTopics; topic++) {
+        phiMatWeightedRowSum = data(docStartIndex, 2) * phiMat(docStartIndex, topic) * wordIndicatorMatrix.row(docStartIndex);
+        for (int word = 1; word < numDistinctWordVec[sampledDoc]; word++) {
+          phiMatWeightedRowSum = phiMatWeightedRowSum + data(docStartIndex + word, 2) * phiMat(docStartIndex + word, topic) * wordIndicatorMatrix.row(docStartIndex + word);
+        }
+        lambdaMatHat.row(topic) = alphaWordsVec + numDocuments*phiMatWeightedRowSum;
       }
 
-    }
-
-    // VI for word distribution parameters (global)
-    for (int topic = 0; topic < numTopics; topic++) {
-      phiMatWeightedRowSum = phiMat(docStartIndex, topic) * wordIndicatorMatrix.row(docStartIndex);
-      for (int word = 1; word < lengthDocumentVec[sampledDoc]; word++) {
-        phiMatWeightedRowSum = phiMatWeightedRowSum + phiMat(docStartIndex + word, topic) * wordIndicatorMatrix.row(docStartIndex + word);
+      // update lambda parameters
+      for (int i = 0; i < numTopics; i++) {
+        lambdaMat.row(i) = (1 - rho)*lambdaMat.row(i) + rho*lambdaMatHat.row(i);
       }
-      lambdaMatHat.row(topic) = alphaWordsVec + numDocuments*phiMatWeightedRowSum;
-    }
-
-    // update lambda parameters
-    for (int i = 0; i < numTopics; i++) {
-      lambdaMat.row(i) = (1 - rho)*lambdaMat.row(i) + rho*lambdaMatHat.row(i);
     }
 
     // calculate the difference in lambda matrices between iterations
@@ -187,7 +192,7 @@ List svi(IntegerVector words, IntegerVector docIDs, IntegerVector lengthDocument
     }
 
     // decrease learn rate parameter
-    if (iter % 1000 == 0) {
+    if (epoch % 1000 == 0) {
       rho = rho/2;
     }
 
@@ -207,6 +212,8 @@ List svi(IntegerVector words, IntegerVector docIDs, IntegerVector lengthDocument
   res[2] = gammaMat;
   return res;
 }
+
+
 
 
 
