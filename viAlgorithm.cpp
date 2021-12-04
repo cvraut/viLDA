@@ -62,6 +62,7 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
   NumericVector phiMatWeightedRowSum;
   NumericVector digammaSumlambdaMat(numTopics);
   NumericVector phiMatArgumentArray(numTopics);
+  NumericVector oldGammaVector(numTopics);
 
   IntegerVector singleSample;
 
@@ -91,7 +92,6 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
 
     for (int iter = 0; iter < numDocuments; iter++) {
       // reset vector used to assess convergence in topic variational parameters
-      NumericVector oldGammaVector(numTopics);
       for (int topic = 0; topic < numTopics; topic++) {
         oldGammaVector[topic] = 0;
       }
