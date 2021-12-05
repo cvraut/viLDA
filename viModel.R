@@ -1,6 +1,10 @@
 library(stats)
 library(Rcpp)
 library(RcppArmadillo)
+library(tictoc)
+library(topicmodels)
+library(tidyverse)
+library(tidytext)
 
 sourceCpp("viAlgorithm.cpp")
 
@@ -14,9 +18,10 @@ start_time <- Sys.time()
 # 3) allow for more general mixture components
 
 ## Unlike R, elements need to be zero based for C++
-vocab = c(0,1,2,3,4)
+set.seed(19890418)
+vocab = c(0,1,2,3,4,5)
 lengthVocab <- length(vocab)
-numTopics <- 2
+numTopics <- 3
 numDocuments <- 32
 lengthDocuments <- 24
 numWords <- numDocuments*lengthDocuments
@@ -26,9 +31,10 @@ alphaWords = 0.2
 alphaTopics = 0.2
 
 # initialize word distributions
-z1 <- c(17/30,1/3,1/10,0,0)
-z2 <- c(0,0,1/10,1/3,17/30)
-wordDistributions <- rbind(z1,z2)
+z1 <- c(1/2,1/3,1/6,0,0,0)
+z2 <- c(0,0,1/2,1/3,1/6,0)
+z3 <- c(1/6,0,0,0,1/2,1/3)
+wordDistributions <- rbind(z1,z2,z3)
 generatedTopics <- rep(NA, numDocuments)
 
 docIDs <- c()
@@ -48,39 +54,68 @@ for (i in 1:numDocuments) {
   words <- c(words, sampledWords)
 }
 
-resList <- svi(words = words,
-                        docIDs = docIDs,
-                        topics = topics,
-                        lengthVocab = lengthVocab,
-                        numDocuments = numDocuments,
-                        lengthDocuments = lengthDocuments,
-                        maxIter = 5000,
-                        maxVBiter = 2000,
-                        alphaWords = alphaWords,
-                        alphaTopics = alphaTopics,
-                        rho = 0.1,
-                        tol = 0.0001)
+dat = data.frame("doc"=docIDs,"word"=words)
+dat = data.frame(data.table::as.data.table(dat)[, .N, by = c('doc','word')])
 
-print("printing estimated variational parameters for the word distribution")
-print(round(resList[[1]]), 3)
-print("printing estimated variational parameters for the topic distribution")
-print(round(resList[[3]]), 3)
-print("printing predicted topics (remember topic label switching is arbitrary")
-print(round(resList[[4]]), 3)
+tic()
+resList <- svi(data=as.matrix(dat),
+               numDistinctWordVec=as.vector(table(dat$doc)),
+               topics = topics,
+               lengthVocab = lengthVocab,
+               numDocuments = numDocuments,
+               maxIterConst = 1,
+               maxVBiterConst = 1,
+               alphaWords = alphaWords,
+               alphaTopics = alphaTopics,
+               rho = 0.1,
+               tol = 0.0001)
+toc()
+
+true = generatedTopics+1
+pred = get_plurarity_topics(resList[[3]])
+get_best_mapping(pred,true)
 
 print("printing true values")
 print(wordDistributions)
 print(generatedTopics)
 
 
+dat_matrix = data.frame(dat) %>% cast_dtm(doc,word,N)
 
+tic()
+mod = topicmodels::LDA(dat_matrix,k = 3, method = "VEM")
+tm_res = posterior(mod,dat_matrix)
+toc()
+true = generatedTopics+1
+pred = get_plurarity_topics(tm_res$topics)
+get_best_mapping(pred,true)
 
+load("data_file_d500_v100_t2.Rda")
+dat_matrix = data.frame(data_obj$dat) %>% cast_dtm(doc,word,N)
+tic()
+mod = topicmodels::LDA(dat_matrix,k = 2, method = "VEM")
+tm_res = posterior(mod,dat_matrix)
+toc()
+true = data_obj$gen_topics+1
+pred = get_plurarity_topics(tm_res$topics)
+get_best_mapping(pred,true)
 
-
-
-
-
-
+tic()
+resList <- svi(data=as.matrix(data_obj$dat),
+               numDistinctWordVec=as.vector(table(data_obj$dat$doc)),
+               topics = 0:(2-1),
+               lengthVocab = 100,
+               numDocuments = 500,
+               maxIterConst = 1000,
+               maxVBiterConst = 1000,
+               alphaWords = alphaWords,
+               alphaTopics = alphaTopics,
+               rho = 0.3,
+               tol = 0.01)
+toc()
+true = data_obj$gen_topics+1
+pred = get_plurarity_topics(resList[[3]])
+get_best_mapping(pred,true)$prop_correct
 
 
 

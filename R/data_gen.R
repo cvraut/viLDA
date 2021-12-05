@@ -74,6 +74,6 @@ data_gen <- function(n_doc,
   }
   dat = data.frame("doc"=doc,"word"=word)
   dat = data.frame(data.table::as.data.table(dat)[, .N, by = c('doc','word')])
-  return(list("dat"=dat,"gen_topics"=generatedTopics,"doc_len"=lengthDocuments))
+  return(list("dat"=dat,"word_dist"=wordDistributions,"gen_topics"=generatedTopics,"doc_len"=lengthDocuments))
 }
 

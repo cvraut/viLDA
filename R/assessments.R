@@ -1,5 +1,7 @@
 # assessments.R
 # Code to assess performance and evaluate results of viLDA
+library(gtools)
+
 
 # hidden
 # maps predicted values according to the specified mapping
@@ -27,7 +29,7 @@ prop_correctly_classified <- function(mapping,predict,true_val){
 # unhidden:
 # get the 1-indexed topics by plurarity of the document to topic matrix
 get_plurarity_topics <- function(doc_2_top_mat){
-  return(apply(resList[[3]],1,FUN=which.max))
+  return(apply(doc_2_top_mat,1,FUN=which.max))
 }
 
 # returns the best mapping through complete search

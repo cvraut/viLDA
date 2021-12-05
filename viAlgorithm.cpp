@@ -62,7 +62,6 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
   NumericVector phiMatWeightedRowSum;
   NumericVector digammaSumlambdaMat(numTopics);
   NumericVector phiMatArgumentArray(numTopics);
-  NumericVector oldGammaVector(numTopics);
 
   IntegerVector singleSample;
 
@@ -82,8 +81,9 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
     wordIndicatorMatrix(word, data(word, 1)) = 1;
   }
 
-  int maxEpoch = maxIterConst*numDocuments;
-  int maxVBiter = maxVBiterConst*numWords;
+  //int maxEpoch = maxIterConst*numDocuments;
+  int maxEpoch = maxIterConst;
+  int maxVBiter = maxVBiterConst;
 
   Rcout << "starting SVI" << "\n";
 
@@ -92,15 +92,12 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
 
     for (int iter = 0; iter < numDocuments; iter++) {
       // reset vector used to assess convergence in topic variational parameters
+      NumericVector oldGammaVector(numTopics);
       for (int topic = 0; topic < numTopics; topic++) {
         oldGammaVector[topic] = 0;
       }
 
       // // sample a document and update its local parameters in this iteration
-      // singleSample = sample(listDocIDs, 1, true);
-      // sampledDoc = singleSample[0];
-      // docStartIndex = docStartIndices[sampledDoc];
-
       sampledDoc = iter;
       docStartIndex = docStartIndices[sampledDoc];
 
@@ -160,7 +157,10 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
         } else {
           oldGammaVector = gammaMat.row(sampledDoc);
         }
-
+        if(epoch <= 5){
+          Rcout << " vbiter: " << vbIter << " epoch: " << epoch << "\n";
+          Rcout << gammaMat << "\n";
+        }
       }
 
       // VI for word distribution parameters (global)
@@ -198,6 +198,7 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
 
   }
 
+  // normalization
   for (int i = 0; i < numTopics; i++) {
     lambdaMat.row(i) = lambdaMat.row(i)/sum(lambdaMat.row(i));
   }
@@ -205,6 +206,8 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
   for (int i = 0; i < numDocuments; i++) {
     gammaMat.row(i) = gammaMat.row(i)/sum(gammaMat.row(i));
   }
+
+
 
   List res(3);
   res[0] = lambdaMat;
