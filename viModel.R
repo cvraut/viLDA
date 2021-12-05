@@ -7,6 +7,8 @@ library(tidyverse)
 library(tidytext)
 
 sourceCpp("viAlgorithm.cpp")
+# source("R/data_gen.R")
+# source("R/assessments.R")
 
 # don't include compilation time
 start_time <- Sys.time()
@@ -63,8 +65,8 @@ resList <- svi(data=as.matrix(dat),
                topics = topics,
                lengthVocab = lengthVocab,
                numDocuments = numDocuments,
-               maxIterConst = 1,
-               maxVBiterConst = 1,
+               maxIterConst = 16,
+               maxVBiterConst = 16,
                alphaWords = alphaWords,
                alphaTopics = alphaTopics,
                rho = 0.1,
@@ -73,49 +75,51 @@ toc()
 
 true = generatedTopics+1
 pred = get_plurarity_topics(resList[[3]])
-get_best_mapping(pred,true)
-
-print("printing true values")
-print(wordDistributions)
-print(generatedTopics)
-
-
-dat_matrix = data.frame(dat) %>% cast_dtm(doc,word,N)
-
-tic()
-mod = topicmodels::LDA(dat_matrix,k = 3, method = "VEM")
-tm_res = posterior(mod,dat_matrix)
-toc()
-true = generatedTopics+1
-pred = get_plurarity_topics(tm_res$topics)
-get_best_mapping(pred,true)
-
-load("data_file_d500_v100_t2.Rda")
-dat_matrix = data.frame(data_obj$dat) %>% cast_dtm(doc,word,N)
-tic()
-mod = topicmodels::LDA(dat_matrix,k = 2, method = "VEM")
-tm_res = posterior(mod,dat_matrix)
-toc()
-true = data_obj$gen_topics+1
-pred = get_plurarity_topics(tm_res$topics)
-get_best_mapping(pred,true)
-
-tic()
-resList <- svi(data=as.matrix(data_obj$dat),
-               numDistinctWordVec=as.vector(table(data_obj$dat$doc)),
-               topics = 0:(2-1),
-               lengthVocab = 100,
-               numDocuments = 500,
-               maxIterConst = 1000,
-               maxVBiterConst = 1000,
-               alphaWords = alphaWords,
-               alphaTopics = alphaTopics,
-               rho = 0.3,
-               tol = 0.01)
-toc()
-true = data_obj$gen_topics+1
-pred = get_plurarity_topics(resList[[3]])
 get_best_mapping(pred,true)$prop_correct
+#
+# print(resList[[1]])
+# print(resList[[3]])
+# print("printing true values")
+# print(wordDistributions)
+# print(generatedTopics)
+#
+#
+# dat_matrix = data.frame(dat) %>% cast_dtm(doc,word,N)
+#
+# tic()
+# mod = topicmodels::LDA(dat_matrix,k = 3, method = "VEM")
+# tm_res = posterior(mod,dat_matrix)
+# toc()
+# true = generatedTopics+1
+# pred = get_plurarity_topics(tm_res$topics)
+# get_best_mapping(pred,true)$prop_correct
+#
+# load("data_file_d500_v100_t2.Rda")
+# dat_matrix = data.frame(data_obj$dat) %>% cast_dtm(doc,word,N)
+# tic()
+# mod = topicmodels::LDA(dat_matrix,k = 2, method = "VEM")
+# tm_res = posterior(mod,dat_matrix)
+# toc()
+# true = data_obj$gen_topics+1
+# pred = get_plurarity_topics(tm_res$topics)
+# get_best_mapping(pred,true)
+#
+# tic()
+# resList <- svi(data=as.matrix(data_obj$dat),
+#                numDistinctWordVec=as.vector(table(data_obj$dat$doc)),
+#                topics = 0:(2-1),
+#                lengthVocab = 100,
+#                numDocuments = 500,
+#                maxIterConst = 1000,
+#                maxVBiterConst = 1000,
+#                alphaWords = alphaWords,
+#                alphaTopics = alphaTopics,
+#                rho = 0.3,
+#                tol = 0.01)
+# toc()
+# true = data_obj$gen_topics+1
+# pred = get_plurarity_topics(resList[[3]])
+# get_best_mapping(pred,true)$prop_correct
 
 
 

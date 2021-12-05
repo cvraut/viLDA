@@ -73,6 +73,7 @@ data_gen <- function(n_doc,
     word <- c(word, sampledWords)
   }
   dat = data.frame("doc"=doc,"word"=word)
+  dat = dat[order(dat$doc, dat$word),]
   dat = data.frame(data.table::as.data.table(dat)[, .N, by = c('doc','word')])
   return(list("dat"=dat,"word_dist"=wordDistributions,"gen_topics"=generatedTopics,"doc_len"=lengthDocuments))
 }
