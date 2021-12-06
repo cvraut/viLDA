@@ -1,5 +1,6 @@
-library(stats)
-library(DirichletReg)
+#' import stats
+#' import DirichletReg
+
 # list of well-defined protocols for Data simulation
 
 F.unif.int <- function(alpha){
@@ -44,14 +45,16 @@ create.beta.matrix.bern <- function(K,p,a=1.0,b=1.0){
 #' output would be a dataframe of N\*p size with a (k-1)\*1 vector detailing the
 #' borders of the cell clusters by row.
 #'
+#' TODO: finish the rest of this later
+#'
+#' @name DataSim
+#'
 #' @param x A number.
 #' @param y A number.
-#' @return The sum of \code{x} and \code{y}.
+#' @return
 #' @examples
-#' add(1, 1)
-#' add(10, 1)
 #'
-#' @export
+#'
 DataSim <- function(N,K,p,F,G,alpha,beta,seed=19890418,...){
   set.seed(seed)
   grp_cnts = rep(0,K)
@@ -76,6 +79,19 @@ DataSim <- function(N,K,p,F,G,alpha,beta,seed=19890418,...){
   return(result)
 }
 
+
+#' DataSim.unif.bern
+#'
+#' TODO: finish later
+#'
+#' @name DataSim.unif.bern
+#'
+#' @param N
+#' The number of cells/rows to cluster
+#' @return
+#' @usage
+#'
+#'
 DataSim.unif.bern <- function(N=100,K=10,p=2000,seed=19890418,beta.params=c(1.0,5.0),...){
   set.seed(seed)
   alpha <- 2*N/K
