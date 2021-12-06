@@ -71,8 +71,6 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
   double phiMatMaxArgument;
   double digammaSumGammaMat;
 
-  double lambdaError;
-
   NumericMatrix wordIndicatorMatrix(data.nrow(), lengthVocab);
   for (int word = 0; word < data.nrow(); word++) {
     for(int token = 0; token < lengthVocab; token++) {
@@ -144,15 +142,6 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
         }
         gammaMat.row(sampledDoc) = alphaTopicsVec + phiMatRowSum;
 
-        // break if convergence is reached
-        if (vbIter % 5 == 0) {
-          if (sum(pow(oldGammaVector - gammaMat.row(sampledDoc), 2)) < tol) {
-            break;
-          } else {
-            oldGammaVector = gammaMat.row(sampledDoc);
-          }
-        }
-
       }
 
       // VI for word distribution parameters (global)
@@ -168,26 +157,6 @@ List svi(IntegerMatrix data, IntegerVector numDistinctWordVec,
       for (int i = 0; i < numTopics; i++) {
         lambdaMat.row(i) = (1 - rho)*lambdaMat.row(i) + rho*lambdaMatHat.row(i);
       }
-    }
-
-    // calculate the difference in lambda matrices between iterations
-    if (epoch % 2 == 0) {
-      lambdaError = 0;
-      for (int topic = 0; topic < numTopics; topic++) {
-        lambdaError = lambdaError + sum(pow(oldLambdaMatrix.row(topic) - lambdaMat.row(topic), 2));
-      }
-
-      // break if convergence is reached
-      if (lambdaError < numTopics*tol) {
-        continue;
-      } else {
-        oldLambdaMatrix = lambdaMat;
-      }
-    }
-
-    // decrease learn rate parameter
-    if (epoch % 1000 == 0) {
-      rho = rho/2;
     }
 
   }
