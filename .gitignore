@@ -1,1 +1,5 @@
 .Rproj.user
+data/data_file_*
+*.BAK
+.swp
+*.out
