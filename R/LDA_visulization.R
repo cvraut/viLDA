@@ -1,11 +1,14 @@
 #'LDA_visualization
 
-#'@param X: the matrix include doc word and N
-#'@param Cluster_Label: Predicted Label
-#'@param Method: normalized method
-#'@param dims: dimension to visualized
-#'@param Three_dimension_Plot: if dims = 3, whether generate a 3D plot or scatterplot for each pair of dimensions.
-#'@param seed:
+#'@param X: the dataframe or matrix contains three columns - Docu, word and Count
+#'@param Cluster_Label: Cluter Label for each observation
+#'@param Method: Character. Divides counts by the sizes for each documents. One of 'proportion', 'median', or 'mean'.
+#''proportion' uses the total counts for each document as the library size.
+#''median' divides the library size of each document by the median library size across all documents.
+#''mean' divides the library size of each document by the mean library size across all documents.
+#'@param dims: integer; Output dimension (default: 2). Available option is 2 or 3.
+#'@param Three_dimension_Plot: if dims = 3, whether to generate a 3D plot or scatter plot for each pairs of dimensions.
+#'@param seed: seed Integer. Passed to set.seed. For reproducibility, a default value of 12345 is used. If NULL, no calls to set.seed
 #'@return visualization plot
 #'
 #'@import ggpubr,ggplot2, Rtsne, rgl
@@ -16,14 +19,14 @@
 LDA_visulization <- function(X,
                              Cluster_Label,
                              Method = c("proportion","mean","median"),
-                             dims = c(2,3),
+                             dims = 2,
                              Three_dimension_Plot = FALSE,
                              seed = 12345){
   # ensure the dims are 2 or 3
   stopifnot("Dims should be either 2 or 3" = dims %in% c(2,3))
 
   # transform to the count matirx
-  Count <- X %>%
+  Count <- data.frame(X) %>%
     pivot_wider(names_from = word,
                 values_from = N) %>%
     select(-doc)
