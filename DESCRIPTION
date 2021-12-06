@@ -15,9 +15,10 @@ Authors@R:
            family = "Zhao",
            role = c("aut", "ctb"),
            email = "zhaoleo@umich.edu"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+Description: Fits LDA using gibbs/variational inference/stochastic vi.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.7)
+LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

@@ -2,8 +2,19 @@
 # scripts to generate test data for viLDA
 
 
-# fill in this documentation later :/
-# also test the mixture thingy
+#' data_gen
+#'
+#' second data generation function
+#'
+#' TODO: finish later
+#'
+#' @name data_gen
+#' @param n_doc
+#' The number of documents to generate
+#' @return
+#' @usage
+#'
+#' @export
 data_gen <- function(n_doc,
                      n_vocab,
                      n_top,

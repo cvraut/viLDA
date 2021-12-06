@@ -1,9 +1,9 @@
 #include <RcppArmadillo.h>
-#include <RcppArmadilloExtensions/sample.h>
 #include <math.h>
 #include <chrono>
 #include <thread>
 using namespace Rcpp;
+using namespace arma;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
