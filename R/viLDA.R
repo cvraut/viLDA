@@ -1,15 +1,8 @@
 # viLDA.R
 # this script wraps the stochastic variational inference c++ code
 
-#' import stats
-#' import Rcpp
-#' import RcppArmadillo
-
 #' viLDA.stoch
 #'
-#' TODO: fill out later
-#'
-#' @name viLDA.stoch
 #' @param dat
 #' The data in long format.
 #' This is a data.frame with 3 columns:

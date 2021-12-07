@@ -13,8 +13,8 @@
 
 }
 \description{
-second data generation function
-}
-\details{
-TODO: finish later
+Technically this returns the number of "code points", in a string. One
+code point usually corresponds to one character, but not always. For example,
+an u with a umlaut might be represented as a single character or as the
+combination a u and an umlaut.
 }

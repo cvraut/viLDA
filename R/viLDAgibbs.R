@@ -1,12 +1,5 @@
-#' import stats
-#' import Rcpp
-#' import RcppArmadillo
-
 #' viLDA.gibbs
 #'
-#' TODO: fill out later
-#'
-#' @name viLDA.gibbs
 #' @param N
 #' The number of documents
 #'

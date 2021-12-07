@@ -1,6 +1,3 @@
-#' import stats
-#' import DirichletReg
-
 # list of well-defined protocols for Data simulation
 
 F.unif.int <- function(alpha){
@@ -46,8 +43,6 @@ create.beta.matrix.bern <- function(K,p,a=1.0,b=1.0){
 #' borders of the cell clusters by row.
 #'
 #' TODO: finish the rest of this later
-#'
-#' @name DataSim
 #'
 #' @param x A number.
 #' @param y A number.
