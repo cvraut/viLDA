@@ -2,10 +2,7 @@
 % Please edit documentation in R/viLDA.R
 \name{viLDA.stoch}
 \alias{viLDA.stoch}
-\title{import stats
-import Rcpp
-import RcppArmadillo
-viLDA.stoch}
+\title{viLDA.stoch}
 \usage{
 viLDA.stoch(
   dat,
@@ -33,5 +30,5 @@ $N = counts}
 
 }
 \description{
-TODO: fill out later
+viLDA.stoch
 }

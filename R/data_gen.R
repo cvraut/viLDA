@@ -1,12 +1,12 @@
 # data_gen.R
 # scripts to generate test data for viLDA
 
-
 #' data_gen
 #'
-#' second data generation function
-#'
-#' TODO: finish later
+#' Technically this returns the number of "code points", in a string. One
+#' code point usually corresponds to one character, but not always. For example,
+#' an u with a umlaut might be represented as a single character or as the
+#' combination a u and an umlaut.
 #'
 #' @name data_gen
 #' @param n_doc
@@ -14,6 +14,7 @@
 #' @return
 #' @usage
 #'
+#' @importFrom data.table as.data.table
 #' @export
 data_gen <- function(n_doc,
                      n_vocab,
@@ -85,7 +86,7 @@ data_gen <- function(n_doc,
   }
   dat = data.frame("doc"=doc,"word"=word)
   dat = dat[order(dat$doc, dat$word),]
-  dat = data.frame(data.table::as.data.table(dat)[, .N, by = c('doc','word')])
+  dat = data.frame(as.data.table(dat)[, .N, by = c('doc','word')])
   return(list("dat"=dat,"word_dist"=wordDistributions,"gen_topics"=generatedTopics,"doc_len"=lengthDocuments))
 }
 

@@ -2,10 +2,7 @@
 % Please edit documentation in R/viLDAgibbs.R
 \name{viLDA.gibbs}
 \alias{viLDA.gibbs}
-\title{import stats
-import Rcpp
-import RcppArmadillo
-viLDA.gibbs}
+\title{viLDA.gibbs}
 \usage{
 viLDA.gibbs(N, K, p, data, alpha, beta, seed = 19890419, ...)
 }
@@ -16,5 +13,5 @@ viLDA.gibbs(N, K, p, data, alpha, beta, seed = 19890419, ...)
 
 }
 \description{
-TODO: fill out later
+viLDA.gibbs
 }
