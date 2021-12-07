@@ -65,7 +65,7 @@ get_plurarity_topics <- function(doc_2_top_mat){
 #' $mapping: k length vector (k is the number of groups) of the best group mappings
 #'
 #' @usage get_best_mapping(predicted,true)
-#'
+#' @importFrom gtools permutations
 #' @export
 get_best_mapping <- function(predicted,true){
   K = max(true)
