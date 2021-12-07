@@ -96,12 +96,12 @@ resList <- svi(data = as.matrix(svi_matrix$X),
                topics = 0:1,
                lengthVocab = nrow(unique(svi_matrix$X[,2])),
                numDocuments = nrow(unique(svi_matrix$X[,1])),
-               maxIterConst = 32,
-               maxVBiterConst = 4,
-               alphaWords = 0.1,
-               alphaTopics = 0.1,
+               maxIterConst =  ceiling(log(nrow(unique(svi_matrix$X[,2])))),
+               maxVBiterConst = ceiling(log(nrow(unique(svi_matrix$X[,2])))),
+               alphaWords = 0.2,
+               alphaTopics = 0.2,
                rho = 1/100000,
-               tol = 0.000001)
+               tol = 0.000000001)
 toc()
 
 pred_svi = get_plurarity_topics(resList[[3]])
