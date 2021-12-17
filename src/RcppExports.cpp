@@ -31,49 +31,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpparma_hello_world
-arma::mat rcpparma_hello_world();
-RcppExport SEXP _viLDA_rcpparma_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpparma_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_outerproduct
-arma::mat rcpparma_outerproduct(const arma::colvec& x);
-RcppExport SEXP _viLDA_rcpparma_outerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_outerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_innerproduct
-double rcpparma_innerproduct(const arma::colvec& x);
-RcppExport SEXP _viLDA_rcpparma_innerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_innerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_bothproducts
-Rcpp::List rcpparma_bothproducts(const arma::colvec& x);
-RcppExport SEXP _viLDA_rcpparma_bothproducts(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_bothproducts(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // svi
 List svi(IntegerMatrix data, IntegerVector numDistinctWordVec, IntegerVector topics, int lengthVocab, int numDocuments, int maxIterConst, int maxVBiterConst, double alphaWords, double alphaTopics, double rho, double tol);
 RcppExport SEXP _viLDA_svi(SEXP dataSEXP, SEXP numDistinctWordVecSEXP, SEXP topicsSEXP, SEXP lengthVocabSEXP, SEXP numDocumentsSEXP, SEXP maxIterConstSEXP, SEXP maxVBiterConstSEXP, SEXP alphaWordsSEXP, SEXP alphaTopicsSEXP, SEXP rhoSEXP, SEXP tolSEXP) {
@@ -98,10 +55,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_viLDA_gibbsSampler", (DL_FUNC) &_viLDA_gibbsSampler, 10},
-    {"_viLDA_rcpparma_hello_world", (DL_FUNC) &_viLDA_rcpparma_hello_world, 0},
-    {"_viLDA_rcpparma_outerproduct", (DL_FUNC) &_viLDA_rcpparma_outerproduct, 1},
-    {"_viLDA_rcpparma_innerproduct", (DL_FUNC) &_viLDA_rcpparma_innerproduct, 1},
-    {"_viLDA_rcpparma_bothproducts", (DL_FUNC) &_viLDA_rcpparma_bothproducts, 1},
     {"_viLDA_svi", (DL_FUNC) &_viLDA_svi, 11},
     {NULL, NULL, 0}
 };

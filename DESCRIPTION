@@ -1,6 +1,6 @@
 Package: viLDA
 Title: variational inference Latent Dirichlet Allocation
-Version: 0.0.1.1
+Version: 0.0.1.5
 Authors@R: 
     c(person(given = "Chinmay",
            family = "Raut",
@@ -27,4 +27,4 @@ LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

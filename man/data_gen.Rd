@@ -8,13 +8,40 @@
 }
 \arguments{
 \item{n_doc}{The number of documents to generate}
+
+\item{n_vocab}{The number of words in the corpus}
+
+\item{n_top}{The number of topics/clusters (K)}
+
+\item{doc_length_scale}{A number proportional to the average number of words in a document}
+
+\item{doc_length_scale_var}{A number proportional to the variance of the average number of words in a document}
+
+\item{voc_p_scale}{A number proportional to the initial probability of each word in a cluster.
+The higher, the less uniform weight gets applied across all topics.}
+
+\item{spike_overlap}{A number proportional to the amount of vocabulary shared across documents from different clusters.
+The default value of 0.05 means that documents from different clusters will share ~5\% of their word distributions with each other.}
+
+\item{alphaWords}{Hyperparameter for document-cluster distribution}
+
+\item{alphaTopics}{Hyperparameter for topic-cluster distribution}
+
+\item{seed}{The random seed for the data generation (ran once at beginning of function)}
+
+\item{topic_mix}{Boolean flag, if TRUE then each document can be generated from different topic clusters}
+
+\item{DEBUG}{Boolean flag, if TRUE then debug print statements are shown to the user}
 }
 \value{
-
+list of 4 attributes:
+\itemize{
+\item dat dataframe of the document_id-word_id-count data
+\item word_dist matrix of the word-topic distributions
+\item gen_topics the selected topic for each document
+\item doc_len a n_doc length vector of the number of words in each document
+}
 }
 \description{
-Technically this returns the number of "code points", in a string. One
-code point usually corresponds to one character, but not always. For example,
-an u with a umlaut might be represented as a single character or as the
-combination a u and an umlaut.
+Function to generate a simulated dataset following the LDA model.
 }
