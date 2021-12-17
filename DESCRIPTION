@@ -1,6 +1,6 @@
 Package: viLDA
 Title: variational inference Latent Dirichlet Allocation
-Version: 0.0.1.5
+Version: 0.0.1.6
 Authors@R: 
     c(person(given = "Chinmay",
            family = "Raut",
@@ -15,7 +15,7 @@ Authors@R:
            family = "Zhao",
            role = c("aut", "ctb"),
            email = "zhaoleo@umich.edu"))
-Description: Fits LDA using gibbs/variational inference/stochastic vi.
+Description: Fits LDA using gibbs/stochastic variational inference.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.7),
          data.table,
