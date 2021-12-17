@@ -13,10 +13,12 @@ get_best_mapping(predicted,true)
 }
 \value{
 list("prop_correct","mapped_pred","true_val","mapping")
-$prop_correct: float \link{0-1} proportion of the true value, that best prediction map correctly gets
-$mapped_pred: n length vector, mapped predictions of best mapping
-$true_val: n length vector of the true value
-$mapping: k length vector (k is the number of groups) of the best group mappings
+\itemize{
+\item $prop_correct: float \link{0-1} proportion of the true value, that best prediction map correctly gets
+\item $mapped_pred: n length vector, mapped predictions of best mapping
+\item $true_val: n length vector of the true value
+\item $mapping: k length vector (k is the number of groups) of the best group mappings
+}
 }
 \description{
 returns the best mapping through complete search

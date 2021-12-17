@@ -13,33 +13,33 @@
 
 \item{n_top}{The number of topics/clusters (K)}
 
-\item{doc_length_scale}{A number proportional to the average number of words in a document}
+\item{doc_length_scale}{A number proportional to the average number of words in a document (default = 8)}
 
-\item{doc_length_scale_var}{A number proportional to the variance of the average number of words in a document}
+\item{doc_length_scale_var}{A number proportional to the variance of the average number of words in a document (default = 2)}
 
-\item{voc_p_scale}{A number proportional to the initial probability of each word in a cluster.
+\item{voc_p_scale}{A number proportional to the initial probability of each word in a cluster. (default = 4)
 The higher, the less uniform weight gets applied across all topics.}
 
-\item{spike_overlap}{A number proportional to the amount of vocabulary shared across documents from different clusters.
+\item{spike_overlap}{A number proportional to the amount of vocabulary shared across documents from different clusters. (default = 0.05)
 The default value of 0.05 means that documents from different clusters will share ~5\% of their word distributions with each other.}
 
-\item{alphaWords}{Hyperparameter for document-cluster distribution}
+\item{alphaWords}{Hyperparameter for document-cluster distribution (default = 0.2)}
 
-\item{alphaTopics}{Hyperparameter for topic-cluster distribution}
+\item{alphaTopics}{Hyperparameter for topic-cluster distribution (default = 0.2)}
 
-\item{seed}{The random seed for the data generation (ran once at beginning of function)}
+\item{seed}{The random seed for the data generation (ran once at beginning of function, default = 19890418)}
 
-\item{topic_mix}{Boolean flag, if TRUE then each document can be generated from different topic clusters}
+\item{topic_mix}{Boolean flag, if TRUE then each document can be generated from different topic clusters (default = FALSE)}
 
-\item{DEBUG}{Boolean flag, if TRUE then debug print statements are shown to the user}
+\item{DEBUG}{Boolean flag, if TRUE then debug print statements are shown to the user (default = FALSE)}
 }
 \value{
-list of 4 attributes:
+list("dat","word_dist","gen_topics","doc_len")
 \itemize{
-\item dat dataframe of the document_id-word_id-count data
-\item word_dist matrix of the word-topic distributions
-\item gen_topics the selected topic for each document
-\item doc_len a n_doc length vector of the number of words in each document
+\item $dat: dataframe of the document_id-word_id-count data
+\item $word_dist: matrix of the word-topic distributions
+\item $gen_topics: the selected topic for each document
+\item $doc_len: a n_doc length vector of the number of words in each document
 }
 }
 \description{

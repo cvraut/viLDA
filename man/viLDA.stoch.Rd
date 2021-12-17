@@ -23,11 +23,43 @@ viLDA.stoch(
 \item{dat}{The data in long format.
 This is a data.frame with 3 columns:
 $doc = doc ids
-$words = word ids
-$N = counts}
+$word = word ids
+$N = counts
+An example of this format can be generated through viLDA::data_gen}
+
+\item{K}{Integer, the number of clusters}
+
+\item{d}{Intger, the number of documents (default = NULL)
+if NULL then this is imputed from the dat object}
+
+\item{v}{Integer, the size of the vocabulary (default = NULL)
+if NULL then this is also imputed from the dat object}
+
+\item{maxIterVal}{Integer, the maximum number of outer iterations for the global optima search (default = NULL)
+if NULL then this imputed to be log(v)}
+
+\item{alphaWords}{Float, the prior for the word-cluster distributions (default = 0.2)}
+
+\item{alphaTopics}{Float, the prior for the document-cluster distributions (default = 0.2)}
+
+\item{rho}{Float, the learning rate for the parameter updates (default = 0.001)}
+
+\item{tol}{Float, the tolerance for assessing convergence (default = 0.1)}
+
+\item{seed}{Float, the seed run at the begining (default = 19890418)}
+
+\item{...}{extra arguments can be passed, but they don't do anything yet 🛠}
+
+\item{maxVBIterVal}{Integer, the maximum number of inner iterations for the local optima search (default = NULL)
+if NULL then this is imputed to be ceiling(sqrt(v))}
 }
 \value{
-
+list([\link{1}],[\link{2}],[\link{3}])
+\itemize{
+\item [\link{1}]: k x v matrix of the expected values for the word-cluster probabilities
+\item [\link{2}]: I x k matrix of the complete stored values of the parameters through all iterations
+\item [\link{3}]: n length vector of the true value
+}
 }
 \description{
 viLDA.stoch
