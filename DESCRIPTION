@@ -1,6 +1,6 @@
 Package: viLDA
 Title: variational inference Latent Dirichlet Allocation
-Version: 0.0.1.5
+Version: 0.0.1.6
 Authors@R: 
     c(person(given = "Chinmay",
            family = "Raut",
