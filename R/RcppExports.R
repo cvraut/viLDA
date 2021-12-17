@@ -5,22 +5,6 @@ gibbsSampler <- function(words, docIDs, topics, lengthVocab, numDocuments, alpha
     .Call(`_viLDA_gibbsSampler`, words, docIDs, topics, lengthVocab, numDocuments, alphaWords, alphaTopics, numEpochs, warmUp, lag)
 }
 
-rcpparma_hello_world <- function() {
-    .Call(`_viLDA_rcpparma_hello_world`)
-}
-
-rcpparma_outerproduct <- function(x) {
-    .Call(`_viLDA_rcpparma_outerproduct`, x)
-}
-
-rcpparma_innerproduct <- function(x) {
-    .Call(`_viLDA_rcpparma_innerproduct`, x)
-}
-
-rcpparma_bothproducts <- function(x) {
-    .Call(`_viLDA_rcpparma_bothproducts`, x)
-}
-
 svi <- function(data, numDistinctWordVec, topics, lengthVocab, numDocuments, maxIterConst, maxVBiterConst, alphaWords, alphaTopics, rho, tol) {
     .Call(`_viLDA_svi`, data, numDistinctWordVec, topics, lengthVocab, numDocuments, maxIterConst, maxVBiterConst, alphaWords, alphaTopics, rho, tol)
 }

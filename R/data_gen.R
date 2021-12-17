@@ -3,18 +3,45 @@
 
 #' data_gen
 #'
-#' Technically this returns the number of "code points", in a string. One
-#' code point usually corresponds to one character, but not always. For example,
-#' an u with a umlaut might be represented as a single character or as the
-#' combination a u and an umlaut.
+#' Function to generate a simulated dataset following the LDA model.
 #'
 #' @name data_gen
 #' @param n_doc
 #' The number of documents to generate
+#' @param n_vocab
+#' The number of words in the corpus
+#' @param n_top
+#' The number of topics/clusters (K)
+#' @param doc_length_scale
+#' A number proportional to the average number of words in a document
+#' @param doc_length_scale_var
+#' A number proportional to the variance of the average number of words in a document
+#' @param voc_p_scale
+#' A number proportional to the initial probability of each word in a cluster.
+#' The higher, the less uniform weight gets applied across all topics.
+#' @param spike_overlap
+#' A number proportional to the amount of vocabulary shared across documents from different clusters.
+#' The default value of 0.05 means that documents from different clusters will share ~5% of their word distributions with each other.
+#' @param alphaWords
+#' Hyperparameter for document-cluster distribution
+#' @param alphaTopics
+#' Hyperparameter for topic-cluster distribution
+#' @param seed
+#' The random seed for the data generation (ran once at beginning of function)
+#' @param topic_mix
+#' Boolean flag, if TRUE then each document can be generated from different topic clusters
+#' @param DEBUG
+#' Boolean flag, if TRUE then debug print statements are shown to the user
 #' @return
+#' list of 4 attributes:
+#'  - dat dataframe of the document_id-word_id-count data
+#'  - word_dist matrix of the word-topic distributions
+#'  - gen_topics the selected topic for each document
+#'  - doc_len a n_doc length vector of the number of words in each document
 #' @usage
 #'
 #' @importFrom data.table as.data.table
+#' @importFrom stats pnorm predict qnorm rbeta rbinom runif
 #' @export
 data_gen <- function(n_doc,
                      n_vocab,
