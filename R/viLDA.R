@@ -70,7 +70,7 @@ viLDA.stoch <- function(dat,
     d = length(unique(dat$doc))
   }
   if(is.null(v)){
-    v = length(unique(dat$words))
+    v = length(unique(dat$word))
   }
   if(is.null(maxIterVal)){
     maxIterVal <- log(v)
