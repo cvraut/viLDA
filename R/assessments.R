@@ -45,8 +45,6 @@ get_plurarity_topics <- function(doc_2_top_mat){
   return(apply(doc_2_top_mat,1,FUN=which.max))
 }
 
-#
-# TODO: finish documenting later :/
 #' get_best_mapping
 #'
 #' returns the best mapping through complete search

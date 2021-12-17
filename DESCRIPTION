@@ -15,7 +15,7 @@ Authors@R:
            family = "Zhao",
            role = c("aut", "ctb"),
            email = "zhaoleo@umich.edu"))
-Description: Fits LDA using gibbs/variational inference/stochastic vi.
+Description: Fits LDA using gibbs/stochastic variational inference.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.7),
          data.table,
