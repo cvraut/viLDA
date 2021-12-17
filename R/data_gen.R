@@ -32,12 +32,11 @@
 #' Boolean flag, if TRUE then each document can be generated from different topic clusters (default = FALSE)
 #' @param DEBUG
 #' Boolean flag, if TRUE then debug print statements are shown to the user (default = FALSE)
-#' @return
-#' list of 4 attributes:
-#'  - dat dataframe of the document_id-word_id-count data
-#'  - word_dist matrix of the word-topic distributions
-#'  - gen_topics the selected topic for each document
-#'  - doc_len a n_doc length vector of the number of words in each document
+#' @return list("dat","word_dist","gen_topics","doc_len")
+#'  - $dat: dataframe of the document_id-word_id-count data
+#'  - $word_dist: matrix of the word-topic distributions
+#'  - $gen_topics: the selected topic for each document
+#'  - $doc_len: a n_doc length vector of the number of words in each document
 #' @usage
 #'
 #' @importFrom data.table as.data.table

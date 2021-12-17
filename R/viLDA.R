@@ -7,7 +7,7 @@
 #' The data in long format.
 #' This is a data.frame with 3 columns:
 #' $doc = doc ids
-#' $words = word ids
+#' $word = word ids
 #' $N = counts
 #' An example of this format can be generated through viLDA::data_gen
 #'
@@ -49,9 +49,9 @@
 #' extra arguments can be passed, but they don't do anything yet 🛠
 #'
 #' @return list([[1]],[[2]],[[3]])
-#' [[1]]: k x v matrix of the expected values for the word-cluster probabilities
-#' [[2]]: I x k matrix of the complete stored values of the parameters through all iterations
-#' [[3]]: n length vector of the true value
+#'  - [[1]]: k x v matrix of the expected values for the word-cluster probabilities
+#'  - [[2]]: I x k matrix of the complete stored values of the parameters through all iterations
+#'  - [[3]]: n length vector of the true value
 #'
 #' @export
 viLDA.stoch <- function(dat,

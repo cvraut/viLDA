@@ -57,10 +57,10 @@ get_plurarity_topics <- function(doc_2_top_mat){
 #' n length vector of true groups
 #'
 #' @return list("prop_correct","mapped_pred","true_val","mapping")
-#' $prop_correct: float [0-1] proportion of the true value, that best prediction map correctly gets
-#' $mapped_pred: n length vector, mapped predictions of best mapping
-#' $true_val: n length vector of the true value
-#' $mapping: k length vector (k is the number of groups) of the best group mappings
+#'  - $prop_correct: float [0-1] proportion of the true value, that best prediction map correctly gets
+#'  - $mapped_pred: n length vector, mapped predictions of best mapping
+#'  - $true_val: n length vector of the true value
+#'  - $mapping: k length vector (k is the number of groups) of the best group mappings
 #'
 #' @usage get_best_mapping(predicted,true)
 #' @importFrom gtools permutations
