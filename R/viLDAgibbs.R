@@ -6,7 +6,14 @@
 #' @return
 #'
 #' @export
-viLDA.gibbs <- function(N,K,p,data,alpha,beta,seed=19890419,...){
+viLDA.gibbs <- function(N,
+                        K,
+                        p,
+                        data,
+                        alpha,
+                        beta,
+                        seed=19890419,
+                        ...){
   set.seed(seed)
   data.long = c(t(data))
   data.id = c(sapply(1:N,FUN=function(i){rep(i - 1, p)}))
